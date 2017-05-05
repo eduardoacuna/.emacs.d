@@ -30,6 +30,35 @@
   (setq custom-file settings-path)
   (load settings-path))
 
+;; global shortcuts
+(defun mark-line (&optional arg allow-extend)
+  (interactive "p\np")
+  (unless arg (setq arg 1))
+  (when (zerop arg)
+    (error "Cannot mark zero lines"))
+  (cond ((and allow-extend
+	      (or (and (eq last-command this-command) (mark t))
+		  (and transient-mark-mode mark-active)))
+	 (set-mark
+	  (save-excursion
+	    (goto-char (mark))
+	    (forward-line arg)
+	    (point))))
+	(t
+	 (forward-line arg)
+	 (push-mark nil t t)
+	 (forward-line (- arg)))))
+
+(bind-key* "<C-return>" #'other-window)
+(bind-key "M-W" #'mark-word)
+(bind-key "M-P" #'mark-paragraph)
+(bind-key "M-L" #'mark-line)
+
+(bind-key "M-X" #'mark-sexp)
+(bind-key "M-D" #'mark-defun)
+
+(bind-key "M-g l" #'goto-line)
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
