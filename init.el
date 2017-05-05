@@ -117,6 +117,18 @@
   :diminish company-mode
   :commands company-mode)
 
+(use-package magit
+  :ensure t
+  :bind (("C-c g" . magit-status))
+  :init
+  (add-hook 'magit-mode-hook 'hl-line-mode)
+  (use-package with-editor
+    :ensure t
+    :demand t
+    :commands (with-editor-async-shell-command
+	       with-editor-shell-command)))
+  
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
