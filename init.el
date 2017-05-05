@@ -65,7 +65,7 @@
   (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
     (find-file tramp-file-name)))
 
-(bind-key "C-x C-F" #'find-file/sudo)
+(bind-key "C-x C-v" #'find-file/sudo)
 
 ;; post initialization
 (when window-system
