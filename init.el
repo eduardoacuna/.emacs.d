@@ -106,6 +106,12 @@
 
   (bind-key "C-i" #'yas-next-field-or-maybe-expand yas-keymap))
 
+(use-package auto-yasnippet
+  :ensure t
+  :bind (("C-c y w" . aya-create)
+	 ("C-c y y" . aya-expand)
+	 ("C-c y o" . aya-open-line)))
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
