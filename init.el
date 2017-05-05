@@ -19,6 +19,17 @@
   (defvar use-package-verbose t)
   (require 'use-package))
 
+(require 'bind-key)
+(require 'diminish nil t)
+
+(defsubst hook-into-modes (func &rest modes)
+  (dolist (mode-hook modes) (add-hook mode-hook func)))
+
+;; separate the hand-written initialization code from the automatic code written by Customize
+(let ((settings-path (expand-file-name "settings.el" user-emacs-directory)))
+  (setq custom-file settings-path)
+  (load settings-path))
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
