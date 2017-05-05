@@ -1,0 +1,8 @@
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+auto-save-list
+/eshell/history
+/eshell/lastdir
+/elpa/
+.projectile
