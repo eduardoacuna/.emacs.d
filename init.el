@@ -59,6 +59,14 @@
 
 (bind-key "M-g l" #'goto-line)
 
+;; find files with sudo and ssh
+(defun find-file/sudo (file-name)
+  (interactive "F(sudo) Find file: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+
+(bind-key "C-x C-F" #'find-file/sudo)
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
