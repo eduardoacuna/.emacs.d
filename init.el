@@ -112,6 +112,11 @@
 	 ("C-c y y" . aya-expand)
 	 ("C-c y o" . aya-open-line)))
 
+(use-package company
+  :ensure t
+  :diminish company-mode
+  :commands company-mode)
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
