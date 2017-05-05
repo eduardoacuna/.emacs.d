@@ -67,6 +67,45 @@
 
 (bind-key "C-x C-v" #'find-file/sudo)
 
+;; packages
+(use-package yasnippet
+  :ensure t
+  :demand t
+  :diminish yas-minor-mode
+  :commands (yas-expand yas-minor-mode)
+  :functions (yas-guess-snippet-directories yas-table-name)
+  :defines (yas-guessed-modes)
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :bind (("C-c y TAB" . yas-expand)
+	 ("C-c y s"   . yas-insert-snippet)
+	 ("C-c y n"   . yas-new-snippet)
+	 ("C-c y v"   . yas-visit-snippet-file))
+  :preface
+  (defun yas-new-snippet (&optional choose-instead-of-guess)
+    (interactive "P")
+    (let ((guessed-directories (yas-guess-snippet-directories)))
+      (switch-to-buffer "*new snippet*")
+      (erase-buffer)
+      (kill-all-local-variables)
+      (snippet-mode)
+      (set (make-local-variable 'yas-guessed-modes)
+           (mapcar #'(lambda (d) (intern (yas-table-name (car d))))
+                   guessed-directories))
+      (unless (and choose-instead-of-guess
+                   (not (y-or-n-p "Insert a snippet with useful headers? ")))
+        (yas-expand-snippet
+         (concat "\n"
+                 "# -*- mode: snippet -*-\n"
+                 "# name: $1\n"
+                 "# --\n"
+                 "$0\n")))))
+
+  :config
+  (yas-load-directory "~/.emacs.d/snippets/")
+  (yas-global-mode 1)
+
+  (bind-key "C-i" #'yas-next-field-or-maybe-expand yas-keymap))
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
