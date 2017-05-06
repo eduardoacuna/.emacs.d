@@ -68,6 +68,12 @@
 (bind-key "C-x C-v" #'find-file/sudo)
 
 ;; packages
+(use-package exec-path-from-shell
+  :ensure t
+  :if (memq window-system '(mac ns x))
+  :config
+  (exec-path-from-shell-initialize))
+
 (use-package yasnippet
   :ensure t
   :demand t
