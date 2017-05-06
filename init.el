@@ -129,6 +129,13 @@
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode))
 
+(use-package dashboard
+  :ensure t
+  :config
+  (setq dashboard-banner-logo-title "Welcome to Nearsoft Emacs")
+  (setq dashboard-startup-banner 'logo)
+  (dashboard-setup-startup-hook))
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
