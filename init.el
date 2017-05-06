@@ -131,10 +131,45 @@
 
 (use-package dashboard
   :ensure t
+  :diminish page-break-lines-mode
   :config
   (setq dashboard-banner-logo-title "Welcome to Nearsoft Emacs")
   (setq dashboard-startup-banner 'logo)
   (dashboard-setup-startup-hook))
+
+(use-package ido
+  :config
+  (setq ido-use-filename-at-point 'guess)
+  (setq ido-everywhere t)
+  (setq ido-virtual-buffers t)
+  (setq ido-file-extensions-order '(".org" ".go" ".html" ".js" ".css"))
+  (setq ido-ignore-extensions t)
+  (ido-mode 1))
+
+(use-package flx-ido
+  :ensure t
+  :requires ido
+  :config
+  (flx-ido-mode))
+
+(use-package ido-hacks
+  :ensure t
+  :requires ido
+  :config
+  (ido-hacks-mode))
+
+(use-package ido-ubiquitous
+  :ensure t
+  :requires ido
+  :config
+  (ido-ubiquitous-mode 1))
+
+(use-package smex
+  :ensure t
+  :bind (("M-x" . smex)
+	 ("C-c C-c M-x" . execute-extended-command))
+  :config
+  (smex-initialize))
 
 ;; post initialization
 (when window-system
