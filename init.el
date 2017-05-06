@@ -2,7 +2,7 @@
 (defconst emacs-start-time (current-time))
 
 ;; raise error when using an old emacs version
-(let ((min-version "25"))
+(let ((min-v(yas-global-mode 1)ersion "25"))
   (when (version< emacs-version min-version)
     (error "Your Emacs version is too old -- this config requires v%s or higher"
 	   min-version)))
@@ -173,6 +173,12 @@
 	 ("C-c C-c M-x" . execute-extended-command))
   :config
   (smex-initialize))
+
+(use-package sublimity
+  :ensure t
+  :config
+  (require 'sublimity-scroll)
+  (sublimity-mode 1))
 
 ;; post initialization
 (when window-system

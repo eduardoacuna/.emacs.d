@@ -7,7 +7,7 @@
  '(ns-command-modifier (quote meta))
  '(package-selected-packages
    (quote
-    (smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package))))
+    (sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
