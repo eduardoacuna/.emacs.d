@@ -70,13 +70,13 @@
 ;; packages
 (use-package exec-path-from-shell
   :ensure t
+  :defer 3
   :if (memq window-system '(mac ns x))
   :config
   (exec-path-from-shell-initialize))
 
 (use-package yasnippet
   :ensure t
-  :demand t
   :diminish yas-minor-mode
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
@@ -109,7 +109,6 @@
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
   (yas-global-mode 1)
-
   (bind-key "C-i" #'yas-next-field-or-maybe-expand yas-keymap))
 
 (use-package auto-yasnippet
@@ -120,8 +119,12 @@
 
 (use-package company
   :ensure t
+  :defer 4
   :diminish company-mode
-  :commands company-mode)
+  :commands company-mode
+  :config
+  (global-company-mode 1))
+
 
 (use-package magit
   :ensure t
