@@ -8,7 +8,7 @@
 					 min-version)))
 
 
-;; initialization and configuration
+;; INITIALIZATION AND CONFIGURATION
 
 (eval-and-compile
   (eval-after-load 'advice
@@ -31,7 +31,7 @@
   (load settings-path))
 
 
-;; global shortcuts
+;; GLOBAL SHORTCUTS
 
 (defun mark-line (&optional arg allow-extend)
   (interactive "p\np")
@@ -79,7 +79,12 @@
 (bind-key "C-c i" #'open-user-init-file)
 
 
-;; packages
+;; PACKAGES
+
+
+;;;;;;;;;;;;;;;;;;
+;; Visual Style ;;
+;;;;;;;;;;;;;;;;;;
 
 (use-package solarized-theme
 	:ensure t
@@ -99,6 +104,10 @@
   (setq dashboard-startup-banner 'logo)
   (dashboard-setup-startup-hook))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Environment Variables ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
@@ -106,6 +115,10 @@
   (exec-path-from-shell-initialize)
 	(exec-path-from-shell-copy-env "GOPATH")
 	(exec-path-from-shell-copy-env "GOROOT"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Snippets/Skeletons/Templates ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package yasnippet
   :ensure t
@@ -149,6 +162,10 @@
 				 ("C-c y y" . aya-expand)
 				 ("C-c y o" . aya-open-line)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto-Complete Engine ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package company
   :ensure t
   :diminish company-mode
@@ -156,12 +173,19 @@
   :config
   (global-company-mode 1))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Git & Source Version Control ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package magit
   :ensure t
   :bind (("C-c g" . magit-status))
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Completion Engine ;;
+;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package ido
   :config
@@ -197,11 +221,19 @@
   :config
   (smex-initialize))
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; Smooth Scrolling ;;
+;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package sublimity
   :ensure t
   :config
   (require 'sublimity-scroll)
   (sublimity-mode 1))
+
+;;;;;;;;;;;;;;;;;
+;; Go Language ;;
+;;;;;;;;;;;;;;;;;
 
 (use-package go-eldoc
 	:ensure t
@@ -241,7 +273,7 @@
 	:commands (go-test-current-project go-test-current-test go-run))
 
 
-;; post initialization
+;; POST INITIALIZATION
 
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
