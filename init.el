@@ -116,6 +116,14 @@
 	(exec-path-from-shell-copy-env "GOPATH")
 	(exec-path-from-shell-copy-env "GOROOT"))
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; Restarting Emacs ;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package restart-emacs
+	:ensure t
+	:bind (("C-c r" . restart-emacs)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippets/Skeletons/Templates ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -123,14 +131,10 @@
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
-  :commands (yas-expand yas-minor-mode)
+  :commands (yas-expand yas-insert-snippet yas-new-snippet yas-visit-snippet-file yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
   :defines (yas-guessed-modes)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :bind (("C-c y TAB" . yas-expand)
-				 ("C-c y s"   . yas-insert-snippet)
-				 ("C-c y n"   . yas-new-snippet)
-				 ("C-c y v"   . yas-visit-snippet-file))
   :preface
   (defun yas-new-snippet (&optional choose-instead-of-guess)
     (interactive "P")
@@ -157,10 +161,17 @@
   (bind-key "C-i" #'yas-next-field-or-maybe-expand yas-keymap))
 
 (use-package auto-yasnippet
-  :ensure t
-  :bind (("C-c y w" . aya-create)
-				 ("C-c y y" . aya-expand)
-				 ("C-c y o" . aya-open-line)))
+  :ensure t)
+
+(bind-keys :prefix-map yasnippet-prefix
+					 :prefix "C-c y"
+					 ("TAB" . yas-expand)
+					 ("s"   . yas-insert-snippet)
+					 ("n"   . yas-new-snippet)
+					 ("v"   . yas-visit-snippet-file)
+					 ("w"   . aya-create)
+					 ("y"   . aya-expand)
+					 ("o"   . aya-open-line))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-Complete Engine ;;
@@ -231,6 +242,15 @@
   (require 'sublimity-scroll)
   (sublimity-mode 1))
 
+;;;;;;;;;;;;;;;;;;;;
+;; Key Cheatsheet ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(use-package which-key
+	:ensure t
+	:config
+	(which-key-mode))
+
 ;;;;;;;;;;;;;;;;;
 ;; Go Language ;;
 ;;;;;;;;;;;;;;;;;
@@ -243,13 +263,6 @@
 (use-package go-mode
   :ensure t
   :mode "\\.go\\'"
-	:bind (:map go-mode-map
-							("C-c C-g d" . godoc-at-point)
-							("C-c C-g i" . go-import-add)
-							("C-c C-g r" . gorepl-run)
-							("C-c C-g x" . go-run)
-							("C-c C-g p" . go-test-current-project)
-							("C-c C-g t" . go-test-current-test))
   :init
   (setq gofmt-command "goimports")
   (add-hook 'before-save-hook 'gofmt-before-save)
@@ -271,6 +284,18 @@
 (use-package gotest
 	:ensure t
 	:commands (go-test-current-project go-test-current-test go-run))
+
+
+(bind-keys :prefix-map golang-prefix
+					 :prefix "C-c C-g"
+					 :map go-mode-map
+					 ("d" . godoc-at-point)
+					 ("i" . go-import-add)
+					 ("r" . gorepl-run)
+					 ("x" . go-run)
+					 ("p" . go-test-current-project)
+					 ("t" . go-test-current-test))
+
 
 
 ;; POST INITIALIZATION
