@@ -410,6 +410,13 @@
 (use-package restclient
   :ensure t)
 
+;;;;;;;;;;;;;;;;;;;;;;
+;; Terminal support ;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package shell-pop
+  :ensure t)
+
 
 ;; POST INITIALIZATION
 

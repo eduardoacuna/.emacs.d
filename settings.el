@@ -7,7 +7,12 @@
  '(ns-command-modifier (quote meta))
  '(package-selected-packages
    (quote
-    (restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+    (shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+ '(shell-pop-full-span t)
+ '(shell-pop-universal-key "C-t")
+ '(shell-pop-shell-type (quote ("ansi-term" "*term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+ '(shell-pop-window-position "bottom")
+ '(shell-pop-window-size 30)
  '(solarized-distinct-doc-face t)
  '(solarized-distinct-fringe-background t)
  '(solarized-emphasize-indicators t)
