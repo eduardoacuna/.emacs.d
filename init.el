@@ -124,9 +124,12 @@
   :ensure t
   :diminish page-break-lines-mode
   :config
-  (setq dashboard-banner-logo-title "Welcome to Nearsoft Emacs")
-  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-banner-logo-title "GNU Emacs")
+  (setq dashboard-startup-banner
+        (expand-file-name "imgs/nearsoft-symbol.png" user-emacs-directory))
   (dashboard-setup-startup-hook))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Environment Variables ;;
