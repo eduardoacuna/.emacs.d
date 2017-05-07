@@ -407,6 +407,9 @@
             (lambda ()
               (setq web-mode-enable-auto-pairing nil))))
 
+(use-package restclient
+  :ensure t)
+
 
 ;; POST INITIALIZATION
 
