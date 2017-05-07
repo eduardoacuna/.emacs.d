@@ -2,10 +2,10 @@
 (defconst emacs-start-time (current-time))
 
 ;; raise error when using an old emacs version
-(let ((min-v(yas-global-mode 1)ersion "25"))
+(let ((min-version "25"))
   (when (version< emacs-version min-version)
     (error "Your Emacs version is too old -- this config requires v%s or higher"
-	   min-version)))
+					 min-version)))
 
 (eval-and-compile
   (eval-after-load 'advice
@@ -37,17 +37,17 @@
   (when (zerop arg)
     (error "Cannot mark zero lines"))
   (cond ((and allow-extend
-	      (or (and (eq last-command this-command) (mark t))
-		  (and transient-mark-mode mark-active)))
-	 (set-mark
-	  (save-excursion
-	    (goto-char (mark))
-	    (forward-line arg)
-	    (point))))
-	(t
-	 (forward-line arg)
-	 (push-mark nil t t)
-	 (forward-line (- arg)))))
+							(or (and (eq last-command this-command) (mark t))
+									(and transient-mark-mode mark-active)))
+				 (set-mark
+					(save-excursion
+						(goto-char (mark))
+						(forward-line arg)
+						(point))))
+				(t
+				 (forward-line arg)
+				 (push-mark nil t t)
+				 (forward-line (- arg)))))
 
 (bind-key* "<C-return>" #'other-window)
 (bind-key "M-W" #'mark-word)
@@ -67,13 +67,18 @@
 
 (bind-key "C-x C-v" #'find-file/sudo)
 
+(require 'compile)
+(bind-key "C-c c" #'compile)
+
 ;; packages
 (use-package exec-path-from-shell
   :ensure t
-  :defer 3
+  :defer 1
   :if (memq window-system '(mac ns x))
   :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+	(exec-path-from-shell-copy-env "GOPATH")
+	(exec-path-from-shell-copy-env "GOROOT"))
 
 (use-package yasnippet
   :ensure t
@@ -83,9 +88,9 @@
   :defines (yas-guessed-modes)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
   :bind (("C-c y TAB" . yas-expand)
-	 ("C-c y s"   . yas-insert-snippet)
-	 ("C-c y n"   . yas-new-snippet)
-	 ("C-c y v"   . yas-visit-snippet-file))
+				 ("C-c y s"   . yas-insert-snippet)
+				 ("C-c y n"   . yas-new-snippet)
+				 ("C-c y v"   . yas-visit-snippet-file))
   :preface
   (defun yas-new-snippet (&optional choose-instead-of-guess)
     (interactive "P")
@@ -114,12 +119,12 @@
 (use-package auto-yasnippet
   :ensure t
   :bind (("C-c y w" . aya-create)
-	 ("C-c y y" . aya-expand)
-	 ("C-c y o" . aya-open-line)))
+				 ("C-c y y" . aya-expand)
+				 ("C-c y o" . aya-open-line)))
 
 (use-package company
   :ensure t
-  :defer 4
+  :defer 2
   :diminish company-mode
   :commands company-mode
   :config
@@ -170,7 +175,7 @@
 (use-package smex
   :ensure t
   :bind (("M-x" . smex)
-	 ("C-c C-c M-x" . execute-extended-command))
+				 ("C-c C-c M-x" . execute-extended-command))
   :config
   (smex-initialize))
 
@@ -180,16 +185,58 @@
   (require 'sublimity-scroll)
   (sublimity-mode 1))
 
+(use-package go-eldoc
+	:ensure t
+	:config
+	(add-hook 'go-mode-hook 'go-eldoc-setup))
+
+(use-package go-mode
+  :ensure t
+  :mode "\\.go\\'"
+	:bind (:map go-mode-map
+							("C-c C-g d" . godoc-at-point)
+							("C-c C-g i" . go-import-add)
+							("C-c C-g r" . gorepl-run)
+							("C-c C-g x" . go-run)
+							("C-c C-g p" . go-test-current-project)
+							("C-c C-g t" . go-test-current-test))
+  :init
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (add-hook 'go-mode-hook (lambda () (setq company-backends '(company-go))))
+  :config
+  (add-hook 'go-mode-hook 'electric-pair-mode)
+	(add-hook 'go-mode-hook (lambda ()
+														(set (make-local-variable 'compile-command)
+																 "go build"))))
+
+(use-package company-go
+  :ensure t
+  :commands company-go)
+
+(use-package gorepl-mode
+	:ensure t
+	:commands gorepl-run)
+
+(use-package gotest
+	:ensure t
+	:commands (go-test-current-project go-test-current-test go-run))
+
+(use-package solarized-theme
+	:ensure t
+	:config
+	(load-theme 'solarized-light t))
+
 ;; post initialization
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
-					    emacs-start-time))))
+																						emacs-start-time))))
     (message "Loading %s...done (%.3fs)" load-file-name elapsed))
   (add-hook 'after-init-hook
-	    `(lambda ()
-	       (let ((elapsed (float-time (time-subtract (current-time)
-							 emacs-start-time))))
-		 (message "Loading %s...done (%.3fs) [after-init]"
-			  ,load-file-name elapsed)))
-	    t))
+						`(lambda ()
+							 (let ((elapsed (float-time (time-subtract (current-time)
+																												 emacs-start-time))))
+								 (message "Loading %s...done (%.3fs) [after-init]"
+													,load-file-name elapsed)))
+						t))
 
