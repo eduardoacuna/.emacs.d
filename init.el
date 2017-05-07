@@ -132,7 +132,30 @@
                           (agenda   . 5)))
   (dashboard-setup-startup-hook))
 
+(use-package neotree
+  :ensure t
+  :bind ([f8] . neotree-toggle)
+  :config
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
+(use-package spaceline-config
+  :ensure spaceline)
+
+(use-package all-the-icons
+  :ensure t)
+
+(use-package anzu
+  :ensure t)
+
+(use-package spaceline-all-the-icons
+  :ensure t
+  :after spaceline
+  :config
+  (spaceline-all-the-icons-theme)
+  (spaceline-all-the-icons--setup-git-ahead)
+  (spaceline-all-the-icons--setup-anzu)
+  (spaceline-all-the-icons--setup-neotree)
+  (spaceline-toggle-all-the-icons-git-ahead-on))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Environment Variables ;;
