@@ -77,6 +77,24 @@
 (bind-key "C-c c" #'compile)
 
 ;; packages
+(use-package solarized-theme
+	:ensure t
+	:config
+	(load-theme 'solarized-light t))
+
+(use-package page-break-lines
+	:ensure t
+	:config
+	(global-page-break-lines-mode 1))
+
+(use-package dashboard
+  :ensure t
+  :diminish page-break-lines-mode
+  :config
+  (setq dashboard-banner-logo-title "Welcome to Nearsoft Emacs")
+  (setq dashboard-startup-banner 'logo)
+  (dashboard-setup-startup-hook))
+
 (use-package exec-path-from-shell
   :ensure t
   :if (memq window-system '(mac ns x))
@@ -140,19 +158,6 @@
   :bind (("C-c g" . magit-status))
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode))
-
-(use-package page-break-lines
-	:ensure t
-	:config
-	(global-page-break-lines-mode 1))
-
-(use-package dashboard
-  :ensure t
-  :diminish page-break-lines-mode
-  :config
-  (setq dashboard-banner-logo-title "Welcome to Nearsoft Emacs")
-  (setq dashboard-startup-banner 'logo)
-  (dashboard-setup-startup-hook))
 
 (use-package ido
   :config
@@ -230,11 +235,6 @@
 (use-package gotest
 	:ensure t
 	:commands (go-test-current-project go-test-current-test go-run))
-
-(use-package solarized-theme
-	:ensure t
-	:config
-	(load-theme 'solarized-light t))
 
 ;; post initialization
 (when window-system
