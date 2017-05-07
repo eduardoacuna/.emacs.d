@@ -343,6 +343,11 @@
 					 ("p" . go-test-current-project)
 					 ("t" . go-test-current-test))
 
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode 1))
+
 
 
 ;; POST INITIALIZATION
