@@ -393,6 +393,31 @@
   (add-hook 'lisp-mode-hook       'enable-paredit-mode)
   (add-hook 'ielm-mode-hook       'enable-paredit-mode))
 
+;;;;;;;;;;;;;;
+;; Web Mode ;;
+;;;;;;;;;;;;;;
+
+(use-package smartparens-config
+  :ensure smartparens)
+
+(use-package web-mode
+  :ensure t
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.js\\'"   . web-mode)
+         ("\\.css\\'"  . web-mode))
+  :config
+  (setq web-mode-markup-indent-offset 4
+        web-mode-css-indent-offset    4
+        web-mode-code-indent-offset   4)
+  (add-hook 'web-mode-hook #'smartparens-mode)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (if (equal web-mode-content-type "javascript")
+                  (web-mode-set-content-type "jsx"))))
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq web-mode-enable-auto-pairing nil))))
+
 
 ;; POST INITIALIZATION
 
