@@ -15,3 +15,7 @@ To install, clone this repo to `~/.emacs.d`.
 Update the config code with `git pull` and update the third-party packages with:
 
 <kbd>M-x package-list-packages</kbd>, then <kbd>U</kbd> followed by <kbd>x</kbd>.
+
+## Screenshots
+
+![](./imgs/screenshot.png)
