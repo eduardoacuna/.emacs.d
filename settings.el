@@ -8,7 +8,7 @@
  '(ns-command-modifier (quote meta))
  '(package-selected-packages
    (quote
-    (multiple-cursors visual-regexp org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+    (multiple-cursors org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
  '(shell-pop-full-span t)
  '(shell-pop-shell-type
    (quote
