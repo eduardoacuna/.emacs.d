@@ -127,6 +127,9 @@
   (setq dashboard-banner-logo-title "GNU Emacs")
   (setq dashboard-startup-banner
         (expand-file-name "imgs/nearsoft-symbol.png" user-emacs-directory))
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)
+                          (agenda   . 5)))
   (dashboard-setup-startup-hook))
 
 
@@ -295,6 +298,7 @@
 
 (use-package which-key
 	:ensure t
+  :diminish which-key-mode
 	:config
 	(which-key-mode)
 	(setq which-key-idle-delay 0.1))
