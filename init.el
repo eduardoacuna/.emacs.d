@@ -244,6 +244,15 @@
            ("p" . mc/mark-previous-like-this)
            ("a" . mc/mark-all-like-this))
 
+(use-package drag-stuff
+  :ensure t
+  :bind (("<s-up>"    . drag-stuff-up)
+         ("<s-down>"  . drag-stuff-down)
+         ("<s-right>" . drag-stuff-right)
+         ("<s-left>"  . drag-stuff-left))
+  :config
+  (drag-stuff-global-mode 1))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-Complete Engine ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
