@@ -225,6 +225,7 @@
 
 (use-package company
   :ensure t
+  :demand t
   :diminish company-mode
   :commands company-mode
   :config
