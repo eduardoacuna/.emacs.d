@@ -25,6 +25,12 @@
 (defsubst hook-into-modes (func &rest modes)
   (dolist (mode-hook modes) (add-hook mode-hook func)))
 
+(defun open-user-init-file ()
+	(interactive)
+	(find-file user-init-file))
+
+(bind-key "C-c i" #'open-user-init-file)
+
 ;; separate the hand-written initialization code from the automatic code written by Customize
 (let ((settings-path (expand-file-name "settings.el" user-emacs-directory)))
   (setq custom-file settings-path)
@@ -73,7 +79,6 @@
 ;; packages
 (use-package exec-path-from-shell
   :ensure t
-  :defer 1
   :if (memq window-system '(mac ns x))
   :config
   (exec-path-from-shell-initialize)
@@ -124,7 +129,6 @@
 
 (use-package company
   :ensure t
-  :defer 2
   :diminish company-mode
   :commands company-mode
   :config
