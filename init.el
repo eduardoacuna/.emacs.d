@@ -7,6 +7,9 @@
     (error "Your Emacs version is too old -- this config requires v%s or higher"
 					 min-version)))
 
+
+;; initialization and configuration
+
 (eval-and-compile
   (eval-after-load 'advice
     `(setq ad-redefinition-action 'accept))
@@ -22,21 +25,14 @@
 (require 'bind-key)
 (require 'diminish nil t)
 
-(defsubst hook-into-modes (func &rest modes)
-  (dolist (mode-hook modes) (add-hook mode-hook func)))
-
-(defun open-user-init-file ()
-	(interactive)
-	(find-file user-init-file))
-
-(bind-key "C-c i" #'open-user-init-file)
-
 ;; separate the hand-written initialization code from the automatic code written by Customize
 (let ((settings-path (expand-file-name "settings.el" user-emacs-directory)))
   (setq custom-file settings-path)
   (load settings-path))
 
+
 ;; global shortcuts
+
 (defun mark-line (&optional arg allow-extend)
   (interactive "p\np")
   (unless arg (setq arg 1))
@@ -76,7 +72,15 @@
 (require 'compile)
 (bind-key "C-c c" #'compile)
 
+(defun open-user-init-file ()
+	(interactive)
+	(find-file user-init-file))
+
+(bind-key "C-c i" #'open-user-init-file)
+
+
 ;; packages
+
 (use-package solarized-theme
 	:ensure t
 	:config
@@ -236,7 +240,9 @@
 	:ensure t
 	:commands (go-test-current-project go-test-current-test go-run))
 
+
 ;; post initialization
+
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
 																						emacs-start-time))))
