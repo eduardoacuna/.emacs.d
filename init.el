@@ -373,8 +373,9 @@
 
 (use-package projectile
   :ensure t
+  :commands projectile-global-mode
   :config
-  (projectile-global-mode 1))
+  (projectile-global-mode))
 
 
 
