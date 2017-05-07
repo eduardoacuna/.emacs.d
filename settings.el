@@ -7,7 +7,7 @@
  '(ns-command-modifier (quote meta))
  '(package-selected-packages
 	 (quote
-		(gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+		(page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
  '(solarized-distinct-doc-face t)
  '(solarized-distinct-fringe-background t)
  '(solarized-emphasize-indicators t)

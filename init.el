@@ -137,6 +137,11 @@
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode))
 
+(use-package page-break-lines
+	:ensure t
+	:config
+	(global-page-break-lines-mode 1))
+
 (use-package dashboard
   :ensure t
   :diminish page-break-lines-mode
