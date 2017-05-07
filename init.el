@@ -30,6 +30,30 @@
   (setq custom-file settings-path)
   (load settings-path))
 
+;; disable unfortunate defaults
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+	(tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+	(scroll-bar-mode -1))
+(when (fboundp 'horizontal-scroll-bar-mode)
+	(horizontal-scroll-bar-mode -1))
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+
+(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+(show-paren-mode 1)
+(setq-default indent-tabs-mode nil)
+(setq require-final-newline t
+      ring-bell-function 'ignore)
+
+
 
 ;; GLOBAL SHORTCUTS
 
@@ -172,6 +196,25 @@
 					 ("w"   . aya-create)
 					 ("y"   . aya-expand)
 					 ("o"   . aya-open-line))
+
+;;;;;;;;;;;;;
+;; Editing ;;
+;;;;;;;;;;;;;
+
+(use-package mwim
+  :ensure t
+  :config
+  (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
+  (global-set-key (kbd "C-e") 'mwim-end-of-line-or-code))
+
+(defun yank-and-indent ()
+  "Yank and then indent the newly formed region according to mode."
+  (interactive)
+  (yank)
+  (call-interactively 'indent-region))
+
+(global-set-key (kbd "C-y") 'yank-and-indent)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-Complete Engine ;;
