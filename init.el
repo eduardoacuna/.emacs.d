@@ -234,6 +234,15 @@
 
 (global-set-key (kbd "C-y") 'yank-and-indent)
 
+(use-package multiple-cursors
+  :ensure t)
+
+(bind-keys :prefix-map cursor-prefix
+					 :prefix "C-c C-c"
+           ("e" . mc/edit-lines)
+           ("n" . mc/mark-next-like-this)
+           ("p" . mc/mark-previous-like-this)
+           ("a" . mc/mark-all-like-this))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto-Complete Engine ;;
@@ -290,8 +299,7 @@
 
 (use-package smex
   :ensure t
-  :bind (("M-x" . smex)
-				 ("C-c C-c M-x" . execute-extended-command))
+  :bind (("M-x" . smex))
   :config
   (smex-initialize))
 

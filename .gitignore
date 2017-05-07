@@ -12,3 +12,4 @@ smex-items
 ido.last
 projectile-bookmarks.eld
 .DS_Store
+.mc-lists.el

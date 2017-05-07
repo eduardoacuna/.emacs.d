@@ -4,10 +4,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(font-use-system-font t)
+ '(mc/always-run-for-all t)
  '(ns-command-modifier (quote meta))
  '(package-selected-packages
    (quote
-    (org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+    (multiple-cursors visual-regexp org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
  '(shell-pop-full-span t)
  '(shell-pop-shell-type
    (quote
