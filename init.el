@@ -371,12 +371,27 @@
 					 ("p" . go-test-current-project)
 					 ("t" . go-test-current-test))
 
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; Project Management ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package projectile
   :ensure t
   :commands projectile-global-mode
   :config
   (projectile-global-mode))
 
+;;;;;;;;;;;;;;;;;;;
+;; Lisp Language ;;
+;;;;;;;;;;;;;;;;;;;
+
+(use-package paredit
+  :ensure t
+  :diminish paredit-mode
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook       'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook       'enable-paredit-mode))
 
 
 ;; POST INITIALIZATION
