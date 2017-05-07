@@ -132,19 +132,10 @@
                           (agenda   . 5)))
   (dashboard-setup-startup-hook))
 
-(use-package neotree
-  :ensure t
-  :bind ("C-c t" . neotree-toggle)
-  :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
 (use-package spaceline-config
   :ensure spaceline)
 
 (use-package all-the-icons
-  :ensure t)
-
-(use-package anzu
   :ensure t)
 
 (use-package spaceline-all-the-icons
@@ -153,8 +144,6 @@
   :config
   (spaceline-all-the-icons-theme)
   (spaceline-all-the-icons--setup-git-ahead)
-  (spaceline-all-the-icons--setup-anzu)
-  (spaceline-all-the-icons--setup-neotree)
   (spaceline-toggle-all-the-icons-git-ahead-on))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -324,7 +313,7 @@
   :diminish which-key-mode
 	:config
 	(which-key-mode)
-	(setq which-key-idle-delay 0.1))
+	(setq which-key-idle-delay 0.5))
 
 ;;;;;;;;;;;;;;;;;
 ;; Go Language ;;
