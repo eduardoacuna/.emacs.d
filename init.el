@@ -15,6 +15,7 @@
     `(setq ad-redefinition-action 'accept))
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
@@ -416,6 +417,26 @@
 
 (use-package shell-pop
   :ensure t)
+
+;;;;;;;;;;;;;;
+;; Org Mode ;;
+;;;;;;;;;;;;;;
+
+(use-package org
+  :ensure org-plus-contrib
+  :mode ("\\.org$" . org-mode)
+  :config
+  (setq org-src-tab-acts-natively          t
+        org-src-preserve-indentation       t
+        org-fontify-whole-heading-line     t
+        org-fontify-done-headline          t
+        org-fontify-quote-and-verse-blocks t))
+
+(use-package org-bullets
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'org-mode-hook #'(lambda () (org-bullets-mode 1))))
 
 
 ;; POST INITIALIZATION
