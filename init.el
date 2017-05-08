@@ -54,7 +54,6 @@
 (setq require-final-newline t
       ring-bell-function 'ignore)
 
-
 
 ;; GLOBAL SHORTCUTS
 
