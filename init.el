@@ -76,6 +76,9 @@
 				 (forward-line (- arg)))))
 
 (bind-key* "<C-return>" #'other-window)
+(bind-key* "<C-S-return>" #'(lambda ()
+                              (interactive)
+                              (other-window -1)))
 (bind-key "M-W" #'mark-word)
 (bind-key "M-P" #'mark-paragraph)
 (bind-key "M-L" #'mark-line)
@@ -128,8 +131,7 @@
   (setq dashboard-startup-banner
         (expand-file-name "imgs/nearsoft-symbol.png" user-emacs-directory))
   (setq dashboard-items '((recents  . 5)
-                          (projects . 5)
-                          (agenda   . 5)))
+                          (projects . 5)))
   (dashboard-setup-startup-hook))
 
 (use-package spaceline-config
@@ -454,6 +456,14 @@
   :init
   (add-hook 'org-mode-hook #'(lambda () (org-bullets-mode 1))))
 
+;;;;;;;;;;;;;;;;;;;
+;; Markdown Mode ;;
+;;;;;;;;;;;;;;;;;;;
+
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
+
 
 ;; POST INITIALIZATION
 
@@ -469,3 +479,4 @@
 													,load-file-name elapsed)))
 						t))
 
+(put 'upcase-region 'disabled nil)
