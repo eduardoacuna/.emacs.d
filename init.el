@@ -44,12 +44,10 @@
 (setq uniquify-buffer-name-style 'forward)
 
 (global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
 (show-paren-mode 1)
+(global-auto-revert-mode t)
 (setq-default indent-tabs-mode nil)
 (setq require-final-newline t
       ring-bell-function 'ignore)
@@ -69,11 +67,13 @@
 					(save-excursion
 						(goto-char (mark))
 						(forward-line arg)
+            (end-of-line)
 						(point))))
 				(t
 				 (forward-line arg)
+         (backward-char)
 				 (push-mark nil t t)
-				 (forward-line (- arg)))))
+				 (forward-line (+ (- arg) 1)))))
 
 (bind-key* "<C-return>" #'other-window)
 (bind-key* "<C-S-return>" #'(lambda ()
@@ -88,17 +88,6 @@
 
 (bind-key "M-g l" #'goto-line)
 
-;; find files with sudo and ssh
-(defun find-file/sudo (file-name)
-  (interactive "F(sudo) Find file: ")
-  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
-    (find-file tramp-file-name)))
-
-(bind-key "C-x C-v" #'find-file/sudo)
-
-(require 'compile)
-(bind-key "C-c c" #'compile)
-
 (defun open-user-init-file ()
 	(interactive)
 	(find-file user-init-file))
@@ -108,6 +97,13 @@
 
 ;; PACKAGES
 
+;;;;;;;;;;;;;;;;;;;;
+;; Package update ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(use-package auto-package-update
+  :ensure t
+  :bind ("C-c u" . auto-package-update-now))
 
 ;;;;;;;;;;;;;;;;;;
 ;; Visual Style ;;
@@ -116,7 +112,27 @@
 (use-package solarized-theme
 	:ensure t
 	:config
-	(load-theme 'solarized-light t))
+	;;(load-theme 'solarized-light t)
+  )
+
+(use-package doom-themes
+  :ensure t
+  :config
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t
+        doom-one-brighter-modeline nil
+        doom-one-brighter-comments nil)
+  (load-theme 'doom-vibrant t)
+  (add-hook 'find-file-hook #'doom-buffer-mode-maybe)
+  (add-hook 'after-revert-hook #'doom-buffer-mode-maybe)
+  (add-hook 'ediff-prepare-buffer-hook #'doom-buffer-mode)
+  (add-hook 'minibuffer-setup-hook #'doom-brighten-minibuffer)
+  (doom-themes-nlinum-config))
+
+(use-package nlinum
+  :ensure t
+  :config
+  (doom-themes-nlinum-config))
 
 (use-package page-break-lines
 	:ensure t
@@ -129,9 +145,9 @@
   :config
   (setq dashboard-banner-logo-title "GNU Emacs")
   (setq dashboard-startup-banner
-        (expand-file-name "imgs/nearsoft-symbol.png" user-emacs-directory))
-  (setq dashboard-items '((recents  . 5)
-                          (projects . 5)))
+        (expand-file-name "imgs/nearsoft-points-symbol.png" user-emacs-directory))
+  (setq dashboard-items '((recents  . 15)
+                          (projects . 10)))
   (dashboard-setup-startup-hook))
 
 (use-package spaceline-config
@@ -167,6 +183,128 @@
 (use-package restart-emacs
 	:ensure t
 	:bind (("C-c r" . restart-emacs)))
+
+;;;;;;;;;
+;; RCP ;;
+;;;;;;;;;
+
+(use-package json-rpc
+  :ensure t)
+
+;;;;;;;;;;;;;
+;; Editing ;;
+;;;;;;;;;;;;;
+
+(use-package mwim
+  :ensure t
+  :config
+  (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
+  (global-set-key (kbd "C-e") 'mwim-end-of-line-or-code))
+
+(defun yank-and-indent ()
+  "Yank and then indent the newly formed region according to mode."
+  (interactive)
+  (yank)
+  (call-interactively 'indent-region))
+
+(global-set-key (kbd "C-y") 'yank-and-indent)
+
+(use-package multiple-cursors
+  :ensure t
+  :config
+  (global-unset-key (kbd "M-<down-mouse-1>"))
+  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click))
+
+(bind-keys :prefix-map cursor-prefix
+					 :prefix "C-c C-c"
+           ("e" . mc/edit-lines)
+           ("n" . mc/mark-next-like-this)
+           ("p" . mc/mark-previous-like-this)
+           ("a" . mc/mark-all-like-this))
+
+(use-package drag-stuff
+  :ensure t
+  :bind (("<s-up>"    . drag-stuff-up)
+         ("<s-down>"  . drag-stuff-down)
+         ("<s-right>" . drag-stuff-right)
+         ("<s-left>"  . drag-stuff-left))
+  :config
+  (drag-stuff-global-mode 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Auto-Complete Engine ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package company
+  :ensure t
+  :demand t
+  :diminish company-mode
+  :commands company-mode
+  :config
+  (global-company-mode 1))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Tagging system ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(use-package ggtags
+  :ensure t
+  :diminish ggtags-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Git & Source Version Control ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package magit
+  :ensure t
+  :bind (("C-c g" . magit-status))
+  :init
+  (add-hook 'magit-mode-hook 'hl-line-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Completion Engine ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package helm-config
+  :ensure helm
+  :demand t
+  :bind (("C-c h" . helm-command-prefix)
+         ("C-h a" . helm-apropos)
+         ("C-x f" . helm-multi-files)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)
+         ("C-M-s" . helm-occur)
+         ("M-x" . helm-M-x))
+  :config
+  (global-unset-key (kbd "C-x c"))
+  (use-package helm-commands)
+  (use-package helm-files)
+  (use-package helm-buffers)
+  (use-package helm-mode
+    :diminish helm-mode
+    :init
+    (helm-mode 1))
+  (helm-autoresize-mode 1)
+  (bind-key "<tab>" #'helm-execute-persistent-action helm-map)
+  (bind-key "C-i" #'helm-execute-persistent-action helm-map)
+  (bind-key "C-z" #'helm-select-action helm-map)
+  (setq helm-split-window-in-side-p t))
+
+(use-package helm-descbinds
+  :ensure t
+  :bind ("C-h b" . helm-descbinds))
+
+(use-package helm-company
+  :ensure t
+  :bind (:map
+         company-mode-map
+         ("C-:" . helm-company)
+         :map
+         company-active-map
+         ("C-:" . helm-company)))
+
+(use-package helm-themes
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippets/Skeletons/Templates ;;
@@ -207,6 +345,11 @@
 (use-package auto-yasnippet
   :ensure t)
 
+(use-package helm-c-yasnippet
+  :ensure t
+  :config
+  (setq helm-yas-space-match-any-greedy t))
+
 (bind-keys :prefix-map yasnippet-prefix
 					 :prefix "C-c y"
 					 ("TAB" . yas-expand)
@@ -214,114 +357,19 @@
 					 ("n"   . yas-new-snippet)
 					 ("v"   . yas-visit-snippet-file)
 					 ("w"   . aya-create)
-					 ("y"   . aya-expand)
-					 ("o"   . aya-open-line))
-
-;;;;;;;;;;;;;
-;; Editing ;;
-;;;;;;;;;;;;;
-
-(use-package mwim
-  :ensure t
-  :config
-  (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
-  (global-set-key (kbd "C-e") 'mwim-end-of-line-or-code))
-
-(defun yank-and-indent ()
-  "Yank and then indent the newly formed region according to mode."
-  (interactive)
-  (yank)
-  (call-interactively 'indent-region))
-
-(global-set-key (kbd "C-y") 'yank-and-indent)
-
-(use-package multiple-cursors
-  :ensure t)
-
-(bind-keys :prefix-map cursor-prefix
-					 :prefix "C-c C-c"
-           ("e" . mc/edit-lines)
-           ("n" . mc/mark-next-like-this)
-           ("p" . mc/mark-previous-like-this)
-           ("a" . mc/mark-all-like-this))
-
-(use-package drag-stuff
-  :ensure t
-  :bind (("<s-up>"    . drag-stuff-up)
-         ("<s-down>"  . drag-stuff-down)
-         ("<s-right>" . drag-stuff-right)
-         ("<s-left>"  . drag-stuff-left))
-  :config
-  (drag-stuff-global-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Auto-Complete Engine ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package company
-  :ensure t
-  :demand t
-  :diminish company-mode
-  :commands company-mode
-  :config
-  (global-company-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Git & Source Version Control ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package magit
-  :ensure t
-  :bind (("C-c g" . magit-status))
-  :init
-  (add-hook 'magit-mode-hook 'hl-line-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;
-;; Completion Engine ;;
-;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package ido
-  :config
-  (setq ido-use-filename-at-point 'guess)
-  (setq ido-everywhere t)
-  (setq ido-virtual-buffers t)
-  (setq ido-file-extensions-order '(".org" ".go" ".html" ".js" ".css"))
-  (setq ido-ignore-extensions t)
-  (ido-mode 1))
-
-(use-package flx-ido
-  :ensure t
-  :requires ido
-  :config
-  (flx-ido-mode))
-
-(use-package ido-hacks
-  :ensure t
-  :requires ido
-  :config
-  (ido-hacks-mode))
-
-(use-package ido-ubiquitous
-  :ensure t
-  :requires ido
-  :config
-  (ido-ubiquitous-mode 1))
-
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex))
-  :config
-  (smex-initialize))
+					 ("e"   . aya-expand)
+					 ("o"   . aya-open-line)
+           ("y"   . helm-yas-complete))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Smooth Scrolling ;;
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package sublimity
+(use-package smooth-scrolling
   :ensure t
   :config
-  (require 'sublimity-scroll)
-  (sublimity-mode 1))
+  (smooth-scrolling-mode 1)
+  (setq smooth-scroll-margin 5))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Key Cheatsheet ;;
@@ -333,6 +381,19 @@
 	:config
 	(which-key-mode)
 	(setq which-key-idle-delay 0.5))
+
+(use-package indicators
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;
+;; Programming ;;
+;;;;;;;;;;;;;;;;;
+
+(add-hook 'prog-mode-hook #'nlinum-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
+
+(bind-keys :prefix-map programming-prefix
+           :prefix "C-.")
 
 ;;;;;;;;;;;;;;;;;
 ;; Go Language ;;
@@ -347,46 +408,155 @@
   :ensure t
   :mode "\\.go\\'"
   :init
-  (setq gofmt-command "goimports")
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook (lambda () (setq company-backends '(company-go))))
   :config
   (add-hook 'go-mode-hook 'electric-pair-mode)
-	(add-hook 'go-mode-hook (lambda ()
-														(set (make-local-variable 'compile-command)
-																 "go build"))))
+  (add-hook 'go-mode-hook '(lambda () (ggtags-mode 1))))
 
 (use-package company-go
   :ensure t
   :commands company-go)
 
-(use-package gorepl-mode
-	:ensure t
-	:commands gorepl-run)
-
 (use-package gotest
 	:ensure t
-	:commands (go-test-current-project go-test-current-test go-run))
+	:commands (go-test-current-file go-test-current-test go-test-current-project go-test-current-benchmark go-run))
 
+(use-package godebug
+  :load-path "site-lisp/godebug/"
+  :commands (go-debug-start go-debug-current-file go-debug-current-test go-debug-current-project))
 
-(bind-keys :prefix-map golang-prefix
-					 :prefix "C-c C-g"
-					 :map go-mode-map
-					 ("d" . godoc-at-point)
-					 ("i" . go-import-add)
-					 ("r" . gorepl-run)
-					 ("x" . go-run)
-					 ("p" . go-test-current-project)
-					 ("t" . go-test-current-test))
+(use-package go-extra
+  :load-path "site-lisp/go-extra/"
+  :commands (go-extra-project-path
+             go-extra-project-packages
+             go-extra-all-packages
+             go-extra-run-script))
+
+(use-package go-dlv
+  :ensure t)
+
+(bind-keys :prefix-map golang-file-prefix
+           :prefix "C-. f"
+           :map go-mode-map
+           ("p" . helm-projectile)
+           ("f" . helm-browse-project))
+
+(bind-keys :prefix-map golang-exec-prefix
+           :prefix "C-. x"
+           :map go-mode-map
+           ("r" . go-run))
+
+(bind-keys :prefix-map golang-test-prefix
+           :prefix "C-. t"
+           :map go-mode-map
+           ("f" . go-test-current-file)
+           ("t" . go-test-current-test)
+           ("p" . go-test-current-project)
+           ("b" . go-test-current-benchmark))
+
+(bind-keys :prefix-map golang-doc-prefix
+           :prefix "C-. d"
+           :map go-mode-map
+           ("p" . godoc-at-point)
+           ("d" . godoc)
+           ("?" . godef-describe))
+
+(bind-keys :prefix-map golang-imports-prefix
+           :prefix "C-. i"
+           :map go-mode-map
+           ("a" . go-import-add)
+           ("r" . go-remove-unused-imports))
+
+(bind-keys :prefix-map golang-goto-prefix
+           :prefix "C-. g"
+           :map go-mode-map
+           ("i" . go-goto-imports)
+           ("f" . go-goto-function)
+           ("a" . go-goto-arguments)
+           ("d" . go-goto-docstring)
+           ("r" . go-goto-return-values)
+           ("n" . go-goto-function-name)
+           ("m" . go-goto-method-receiver)
+           ("?" . go))
+
+(bind-keys :prefix-map golang-jump-prefix
+           :prefix "C-. j"
+           :map go-mode-map
+           ("j" . godef-jump)
+           ("o" . godef-jump-other-window))
+
+(bind-keys :prefix-map golang-debug-prefix
+           :prefix "C-. b"
+           :map go-mode-map
+           ("d" . dlv))
+
+(defun dlv-current-test ()
+  (interactive)
+  (let (current-test-name current-func-loc)
+    (save-excursion
+      (when (go-beginning-of-defun)
+        (setq current-func-loc (format "%s:%d" buffer-file-name (line-number-at-pos)))
+        (when (looking-at go-func-regexp)
+          (let ((func-name (match-string 1)))
+            (when (and (string-match-p "_test\.go$" buffer-file-name)
+                       (string-match-p "^Test\\|^Example" func-name))
+              (message func-name)
+              (setq current-test-name func-name))))))
+    (if current-func-loc
+        (let (gud-buffer-name dlv-command)
+          (if current-test-name
+              (progn
+                (setq gud-buffer-name "*dlv-test*")
+                (setq dlv-command (concat go-dlv-command-name " test")))
+            (error "Not in a test"))
+          (let ((gud-buffer (get-buffer gud-buffer-name)))
+            (when gud-buffer (kill-buffer gud-bufer)))
+          (dlv dlv-command)
+          (gud-call (format "break %s" current-func-loc))
+          (gud-call "continue"))
+      (error "Not in a function"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Common Lisp Language ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(load (expand-file-name "~/.roswell/lisp/quicklisp/slime-helper.el"))
+
+(setf slime-lisp-implementations
+      `((sbcl ("ros" "-Q" "-l" "~/.sbclrc" "-L" "sbcl" "run"))
+        (ccl  ("ros" "-Q" "-l" "~/.ccl-init.lisp" "-L" "ccl-bin" "run"))))
+
+(setf slime-default-lisp 'sbcl)
+
+(setq slime-net-coding-system 'utf-8-unix)
+
+(defun custom-lisp-hook ()
+  (interactive)
+  (slime-mode)
+  (local-set-key [tab] 'slime-complete-symbol)
+  (local-set-key (kbd "M-q") 'slime-reindent-defun)
+  (set (make-local-variable lisp-indent-function) 'common-lisp-indent-function)
+  (setq slime-load-failed-fasl 'never))
+
+(add-hook 'lisp-mode-hook 'custom-lisp-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
-;; Project Management ;;
+;; project Management ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package projectile
   :ensure t
+  :diminish projectile-mode
   :commands projectile-global-mode
+  :defer 5
+  :bind-keymap ("C-c p" . projectile-command-map)
   :config
+  (use-package helm-projectile
+    :ensure t
+    :config
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on))
   (projectile-global-mode))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -414,9 +584,9 @@
          ("\\.js\\'"   . web-mode)
          ("\\.css\\'"  . web-mode))
   :config
-  (setq web-mode-markup-indent-offset 4
-        web-mode-css-indent-offset    4
-        web-mode-code-indent-offset   4)
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset    2
+        web-mode-code-indent-offset   2)
   (add-hook 'web-mode-hook #'smartparens-mode)
   (add-hook 'web-mode-hook
             (lambda ()
@@ -444,11 +614,16 @@
   :ensure org-plus-contrib
   :mode ("\\.org$" . org-mode)
   :config
+  (use-package ob-restclient :ensure t)
+  (use-package htmlize :ensure t)
   (setq org-src-tab-acts-natively          t
         org-src-preserve-indentation       t
         org-fontify-whole-heading-line     t
         org-fontify-done-headline          t
-        org-fontify-quote-and-verse-blocks t))
+        org-fontify-quote-and-verse-blocks t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((restclient . t))))
 
 (use-package org-bullets
   :ensure t
@@ -464,10 +639,19 @@
   :ensure t
   :mode ("\\.md\\'" . markdown-mode))
 
+;;;;;;;;;;;;;;
+;; YML Mode ;;
+;;;;;;;;;;;;;;
+
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yml\\'" . yaml-mode))
+
 
 ;; POST INITIALIZATION
 
 (when window-system
+  (toggle-frame-maximized)
   (let ((elapsed (float-time (time-subtract (current-time)
 																						emacs-start-time))))
     (message "Loading %s...done (%.3fs)" load-file-name elapsed))
@@ -480,3 +664,4 @@
 						t))
 
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
