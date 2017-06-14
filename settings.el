@@ -25,7 +25,7 @@
  '(org-fontify-whole-heading-line t)
  '(package-selected-packages
    (quote
-    (ggtags htmlize ob-restclient yaml-mode yaml yml yml-mode indicators doom-themes nlinum layout-restore realgud helm-themes json-rpc auto-package-update helm-c-yasnippet helm-company helm-projectile helm-descbinds helm smooth-scrolling go-dlv markdown-mode drag-stuff multiple-cursors visual-regexp org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
+    (helm-gtags ggtags htmlize ob-restclient yaml-mode yaml yml yml-mode indicators doom-themes nlinum layout-restore realgud helm-themes json-rpc auto-package-update helm-c-yasnippet helm-company helm-projectile helm-descbinds helm smooth-scrolling go-dlv markdown-mode drag-stuff multiple-cursors visual-regexp org-bullets org-plus-contrib shell-pop restclient smartparens web-mode paredit neotree anzu spaceline-all-the-icons all-the-icons spaceline projectile mwim restart-emacs which-key page-break-line gotest gorepl-mode solarized-theme go-eldoc company-go compay-go go-mode sublimity smex ido-ubiquitous ido-hacks ido-vertical-mode flx-ido dashboard exec-path-from-shell magit company auto-yasnippet yasnippet use-package)))
  '(shell-pop-full-span t)
  '(shell-pop-shell-type
    (quote

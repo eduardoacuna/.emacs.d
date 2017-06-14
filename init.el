@@ -247,9 +247,8 @@
 ;; Tagging system ;;
 ;;;;;;;;;;;;;;;;;;;;
 
-(use-package ggtags
-  :ensure t
-  :diminish ggtags-mode)
+(use-package helm-gtags
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Git & Source Version Control ;;
@@ -408,11 +407,11 @@
   :ensure t
   :mode "\\.go\\'"
   :init
-  (add-hook 'before-save-hook 'gofmt-before-save)
+  ;;(add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook (lambda () (setq company-backends '(company-go))))
   :config
   (add-hook 'go-mode-hook 'electric-pair-mode)
-  (add-hook 'go-mode-hook '(lambda () (ggtags-mode 1))))
+  (add-hook 'go-mode-hook 'helm-gtags-mode))
 
 (use-package company-go
   :ensure t
@@ -422,19 +421,20 @@
 	:ensure t
 	:commands (go-test-current-file go-test-current-test go-test-current-project go-test-current-benchmark go-run))
 
-(use-package godebug
-  :load-path "site-lisp/godebug/"
-  :commands (go-debug-start go-debug-current-file go-debug-current-test go-debug-current-project))
+;; (use-package godebug
+;;   :load-path "site-lisp/godebug/"
+;;   :commands (go-debug-start go-debug-current-file go-debug-current-test go-debug-current-project))
 
 (use-package go-extra
   :load-path "site-lisp/go-extra/"
   :commands (go-extra-project-path
              go-extra-project-packages
              go-extra-all-packages
-             go-extra-run-script))
+             go-extra-run-script
+             go-extra-regenerate-tags))
 
-(use-package go-dlv
-  :ensure t)
+;; (use-package go-dlv
+;;   :ensure t)
 
 (bind-keys :prefix-map golang-file-prefix
            :prefix "C-. f"
@@ -490,6 +490,19 @@
            :prefix "C-. b"
            :map go-mode-map
            ("d" . dlv))
+
+(bind-keys :prefix-map golang-symbols-prefix
+           :prefix "C-. s"
+           :map go-mode-map
+           ("d" . helm-gtags-find-tag)
+           ("r" . helm-gtags-find-rtag)
+           ("a" . helm-gtags-select)
+           ("s" . helm-gtags-show-stack)
+           ("g" . go-extra-regenerate-tags))
+
+(bind-keys :map go-mode-map
+           ("M-." . helm-gtags-find-tag-from-here)
+           ("M-," . helm-gtags-pop-stack))
 
 (defun dlv-current-test ()
   (interactive)

@@ -63,4 +63,11 @@
         (shell-command (concat "./scripts/" file) "*go-script*" "*go-script*")
         (pop-to-buffer "*go-script*")))))
 
+;;;###autoload
+(defun go-extra-regenerate-tags ()
+  (interactive)
+  (let ((default-directory (go-extra-project-path)))
+    (when default-directory
+      (shell-command "gogtags" nil))))
+
 (provide 'go-extra)

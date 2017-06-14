@@ -86,10 +86,10 @@
     (when (accept-process-output go-delve-client-process 5)
       go-delve-last-response)))
 
-(message (go-delve-send-message '(:method "RPCServer.FindLocation"
-                                          :params ['(:Scope '(:GoroutineID -1 :Frame 0) :Loc "main.main")]
-                                          :id 1)))
+;; (message (go-delve-send-message '(:method "RPCServer.FindLocation"
+;;                                           :params ['(:Scope '(:GoroutineID -1 :Frame 0) :Loc "main.main")]
+;;                                           :id 1)))
 
-{"method":"RPCServer.FindLocation","params":[{"Scope":{"GoroutineID":-1,"Frame":0},"Loc":"main.main"}],"id":1}
+;; {"method":"RPCServer.FindLocation","params":[{"Scope":{"GoroutineID":-1,"Frame":0},"Loc":"main.main"}],"id":1}
 
 (provide 'go-delve)
